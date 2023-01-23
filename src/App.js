@@ -1,12 +1,18 @@
 import './App.css';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, connect } from 'react-redux'
 import { fetchData, incrementId, decrementId, clearData, setData, customId } from './ducks/dataSlice'
 
 
 function App(props) {
   const dispatch = useDispatch()
   const data = useSelector(state => state.data)
+
+
+  useEffect(() => {
+    dispatch(fetchData())
+}, [props.objectId, dispatch])
+
 
   const renderImg = () => {
     if(data.apiData.primaryImage) {
@@ -15,8 +21,6 @@ function App(props) {
       return <p>Not found</p>
     }
   }
-
-
 
   return (
     <div className="App">
@@ -33,4 +37,9 @@ function App(props) {
     </div>
   );
 }
-export default App
+
+const mapStateToProps = (state) => ({
+  objectId: state.data.objectId
+})
+
+export default connect(mapStateToProps)(App)
